@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Divisor de Tensão | Eletrônica e Tecnologia</title>
+    <style>
+        :root {
+            --cor-principal: #008080; /* Verde água */
+            --cor-secundaria: #1c1c1c; /* Preto quase total */
+            --cor-fundo: #0a0a0a;
+            --cor-texto: #e0e0e0;
+            --cor-botoes: #00a0a0;
+            --cor-botoes-hover: #00c0c0;
+            --cor-borda: #444;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--cor-fundo);
+            color: var(--cor-texto);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background-color: var(--cor-secundaria);
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--cor-borda);
+        }
+
+        h1 {
+            color: var(--cor-principal);
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 2em;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: var(--cor-principal);
+        }
+
+        input[type="number"], select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--cor-borda);
+            border-radius: 6px;
+            background-color: #2c2c2c;
+            color: var(--cor-texto);
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        input[type="number"]:focus, select:focus {
+            outline: none;
+            border-color: var(--cor-botoes);
+            box-shadow: 0 0 5px var(--cor-botoes);
+        }
+
+        .option-selector {
+            margin-bottom: 20px;
+        }
+
+        .option-selector label {
+            color: var(--cor-texto);
+            display: inline-block;
+            margin-right: 15px;
+        }
+        
+        button {
+            width: 100%;
+            padding: 15px;
+            background-color: var(--cor-botoes);
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: var(--cor-botoes-hover);
+        }
+        
+        #resultado {
+            margin-top: 25px;
+            padding: 15px;
+            background-color: #1a1a1a;
+            border: 1px dashed var(--cor-principal);
+            border-radius: 6px;
+            font-size: 1.1em;
+            line-height: 1.5;
+        }
+        
+        #resultado .formula {
+            margin-top: 10px;
+            font-family: monospace;
+            background-color: #2a2a2a;
+            padding: 10px;
+            border-radius: 4px;
+            white-space: pre-wrap; /* Permite a quebra de linha em telas pequenas */
+            word-wrap: break-word; /* Permite a quebra de palavras */
+        }
+        
+        #resultado p {
+            margin: 0;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Calculadora de Divisor de Tensão</h1>
+
+        <div class="option-selector">
+            <label for="tipoCalculo">Calcular:</label>
+            <select id="tipoCalculo" onchange="alternarCampos()">
+                <option value="vo">Tensão de Saída (Vo)</option>
+                <option value="r2">Resistor R2</option>
+            </select>
+        </div>
+        
+        <div id="vo-inputs">
+            <div class="input-group">
+                <label for="vin-vo">Tensão de Entrada (Vin) (V):</label>
+                <input type="number" id="vin-vo" placeholder="Ex: 5" step="0.01">
+            </div>
+            <div class="input-group">
+                <label for="r1-vo">Resistor R1 (Ω):</label>
+                <input type="number" id="r1-vo" placeholder="Ex: 1000" step="1">
+            </div>
+            <div class="input-group">
+                <label for="r2-vo">Resistor R2 (Ω):</label>
+                <input type="number" id="r2-vo" placeholder="Ex: 2200" step="1">
+            </div>
+        </div>
+
+        <div id="r2-inputs" class="hidden">
+            <div class="input-group">
+                <label for="vin-r2">Tensão de Entrada (Vin) (V):</label>
+                <input type="number" id="vin-r2" placeholder="Ex: 9" step="0.01">
+            </div>
+            <div class="input-group">
+                <label for="vo-r2">Tensão de Saída (Vo) (V):</label>
+                <input type="number" id="vo-r2" placeholder="Ex: 5" step="0.01">
+            </div>
+            <div class="input-group">
+                <label for="r1-r2">Resistor R1 (Ω):</label>
+                <input type="number" id="r1-r2" placeholder="Ex: 10000" step="1">
+            </div>
+        </div>
+
+        <button onclick="calcular()">Calcular</button>
+        
+        <div id="resultado">
+            <p>Preencha os campos e clique em Calcular para ver o resultado e a fórmula!</p>
+        </div>
+    </div>
+
+    <script>
+        function alternarCampos() {
+            const tipo = document.getElementById('tipoCalculo').value;
+            document.getElementById('vo-inputs').classList.add('hidden');
+            document.getElementById('r2-inputs').classList.add('hidden');
+            
+            if (tipo === 'vo') {
+                document.getElementById('vo-inputs').classList.remove('hidden');
+            } else if (tipo === 'r2') {
+                document.getElementById('r2-inputs').classList.remove('hidden');
+            }
+        }
+
+        function calcular() {
+            const tipo = document.getElementById('tipoCalculo').value;
+            const resultadoDiv = document.getElementById('resultado');
+            resultadoDiv.innerHTML = '';
+            
+            let vin, vo, r1, r2;
+
+            if (tipo === 'vo') {
+                vin = parseFloat(document.getElementById('vin-vo').value);
+                r1 = parseFloat(document.getElementById('r1-vo').value);
+                r2 = parseFloat(document.getElementById('r2-vo').value);
+
+                if (isNaN(vin) || isNaN(r1) || isNaN(r2) || r1 <= 0 || r2 <= 0) {
+                    resultadoDiv.innerHTML = '<p style="color: #ff6347;">Por favor, insira valores numéricos válidos e positivos para os resistores.</p>';
+                    return;
+                }
+
+                vo = vin * (r2 / (r1 + r2));
+                const formula = `Vo = Vin * (R2 / (R1 + R2))\nVo = ${vin}V * (${r2}Ω / (${r1}Ω + ${r2}Ω))\nVo = ${vo.toFixed(2)}V`;
+                resultadoDiv.innerHTML = `
+                    <p>A tensão de saída (Vo) é de: <b style="color: var(--cor-principal);">${vo.toFixed(2)} V</b></p>
+                    <p><b>Como a fórmula funciona:</b></p>
+                    <p>A tensão de saída (Vo) em um divisor de tensão é a tensão total (Vin) multiplicada pela razão do resistor onde a tensão é medida (R2) pela soma dos dois resistores (R1 + R2).</p>
+                    <p class="formula">${formula}</p>
+                `;
+
+            } else if (tipo === 'r2') {
+                vin = parseFloat(document.getElementById('vin-r2').value);
+                vo = parseFloat(document.getElementById('vo-r2').value);
+                r1 = parseFloat(document.getElementById('r1-r2').value);
+
+                if (isNaN(vin) || isNaN(vo) || isNaN(r1) || vin <= 0 || vo <= 0 || r1 <= 0 || vo >= vin) {
+                    resultadoDiv.innerHTML = '<p style="color: #ff6347;">Por favor, insira valores numéricos válidos. A tensão de saída (Vo) deve ser menor que a tensão de entrada (Vin).</p>';
+                    return;
+                }
+                
+                // Rearranjando a fórmula: Vo = Vin * (R2 / (R1 + R2))
+                // Vo * (R1 + R2) = Vin * R2
+                // Vo * R1 + Vo * R2 = Vin * R2
+                // Vo * R1 = Vin * R2 - Vo * R2
+                // Vo * R1 = R2 * (Vin - Vo)
+                // R2 = (Vo * R1) / (Vin - Vo)
+                
+                r2 = (vo * r1) / (vin - vo);
+                const formula = `R2 = (Vo * R1) / (Vin - Vo)\nR2 = (${vo}V * ${r1}Ω) / (${vin}V - ${vo}V)\nR2 = ${r2.toFixed(2)}Ω`;
+                resultadoDiv.innerHTML = `
+                    <p>O valor do resistor R2 é de: <b style="color: var(--cor-principal);">${r2.toFixed(2)} Ω</b></p>
+                    <p><b>Como a fórmula funciona:</b></p>
+                    <p>Para encontrar o valor de R2, a fórmula do divisor de tensão foi rearranjada. Ela nos diz que R2 é igual à tensão de saída (Vo) multiplicada por R1, dividida pela diferença entre a tensão de entrada (Vin) e a tensão de saída (Vo).</p>
+                    <p class="formula">${formula}</p>
+                `;
+            }
+        }
+        
+        // Chamada inicial para garantir que os campos corretos sejam exibidos ao carregar a página
+        alternarCampos();
+    </script>
+</body>
+</html>
