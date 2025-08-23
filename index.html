@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu Principal | Eletrônica e Tecnologia</title>
+    <style>
+        :root {
+            --cor-principal: #008080; /* Verde água */
+            --cor-fundo: #0a0a0a;
+            --cor-secundaria: #1c1c1c; /* Preto quase total */
+            --cor-texto: #e0e0e0;
+            --cor-botoes: #00a0a0;
+            --cor-botoes-hover: #00c0c0;
+            --cor-borda: #444;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--cor-fundo);
+            color: var(--cor-texto);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 400px;
+            background-color: var(--cor-secundaria);
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--cor-borda);
+            text-align: center;
+        }
+
+        header {
+            margin-bottom: 25px;
+        }
+
+        header img {
+            width: 150px;
+            height: auto;
+            border-radius: 50%;
+            border: 2px solid var(--cor-principal);
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            color: var(--cor-principal);
+            font-size: 1.8em;
+            margin: 0;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--cor-borda);
+            border-radius: 6px;
+            background-color: #2c2c2c;
+            color: var(--cor-texto);
+            font-size: 16px;
+            box-sizing: border-box;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-image: url('data:image/svg+xml;utf8,<svg fill="%23e0e0e0" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: var(--cor-botoes);
+            box-shadow: 0 0 5px var(--cor-botoes);
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            background-color: var(--cor-botoes);
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: var(--cor-botoes-hover);
+        }
+        
+        #mensagemErro {
+            color: #ff6347;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <img src="LOGO.PNG" alt="Logotipo do Canal Eletrônica e Tecnologia">
+            <h1>Eletrônica e Tecnologia</h1>
+        </header>
+
+        <div class="form-group">
+            <label for="selectPagina">Selecione uma página para navegar:</label>
+            <select id="selectPagina">
+                <option value="" disabled selected>Carregando...</option>
+            </select>
+        </div>
+
+        <button onclick="navegar()">IR</button>
+        <p id="mensagemErro"></p>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', carregarLista);
+
+        async function carregarLista() {
+            const select = document.getElementById('selectPagina');
+            const mensagemErro = document.getElementById('mensagemErro');
+
+            try {
+                const response = await fetch('lista.txt');
+                if (!response.ok) {
+                    throw new Error(`Erro ao carregar o arquivo: ${response.statusText}`);
+                }
+                const texto = await response.text();
+                const linhas = texto.split('\n').filter(linha => linha.trim() !== '');
+
+                select.innerHTML = '<option value="" disabled selected>Escolha uma opção</option>';
+                
+                if (linhas.length === 0) {
+                     mensagemErro.textContent = 'O arquivo lista.txt está vazio.';
+                     return;
+                }
+
+                linhas.forEach(linha => {
+                    const partes = linha.split(',');
+                    if (partes.length === 2) {
+                        const descricao = partes[0].trim();
+                        const caminho = partes[1].trim();
+                        const option = document.createElement('option');
+                        option.textContent = descricao;
+                        option.value = caminho;
+                        select.appendChild(option);
+                    }
+                });
+
+            } catch (error) {
+                console.error('Erro:', error);
+                mensagemErro.textContent = 'Não foi possível carregar a lista de páginas. Verifique o arquivo lista.txt.';
+                select.innerHTML = '<option value="" disabled selected>Erro ao carregar</option>';
+            }
+        }
+
+        function navegar() {
+            const select = document.getElementById('selectPagina');
+            const caminho = select.value;
+
+            if (caminho) {
+                window.location.href = caminho;
+            } else {
+                const mensagemErro = document.getElementById('mensagemErro');
+                mensagemErro.textContent = 'Por favor, selecione uma página válida.';
+            }
+        }
+    </script>
+
+</body>
+</html>
