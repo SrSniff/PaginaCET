@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Cores do Resistor | Eletrônica e Tecnologia</title>
+    <style>
+        :root {
+            --cor-principal: #008080; /* Verde água */
+            --cor-fundo: #0a0a0a;
+            --cor-secundaria: #1c1c1c; /* Preto quase total */
+            --cor-texto: #e0e0e0;
+            --cor-botoes: #00a0a0;
+            --cor-botoes-hover: #00c0c0;
+            --cor-borda: #444;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--cor-fundo);
+            color: var(--cor-texto);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background-color: var(--cor-secundaria);
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--cor-borda);
+            text-align: center;
+        }
+
+        h1 {
+            color: var(--cor-principal);
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        .option-selector {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: var(--cor-texto);
+        }
+
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--cor-borda);
+            border-radius: 6px;
+            background-color: #2c2c2c;
+            color: var(--cor-texto);
+            font-size: 16px;
+            box-sizing: border-box;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-image: url('data:image/svg+xml;utf8,<svg fill="%23e0e0e0" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+        }
+        
+        input[type="number"], input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--cor-borda);
+            border-radius: 6px;
+            background-color: #2c2c2c;
+            color: var(--cor-texto);
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        select:focus, input:focus {
+            outline: none;
+            border-color: var(--cor-botoes);
+            box-shadow: 0 0 5px var(--cor-botoes);
+        }
+        
+        button {
+            width: 100%;
+            padding: 15px;
+            background-color: var(--cor-botoes);
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 20px;
+        }
+
+        button:hover {
+            background-color: var(--cor-botoes-hover);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .input-section {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .result-section {
+            margin-top: 30px;
+            padding: 15px;
+            background-color: #1a1a1a;
+            border: 1px dashed var(--cor-principal);
+            border-radius: 6px;
+        }
+
+        .resistor-bands {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 15px;
+        }
+
+        .resistor-band {
+            width: 40px;
+            height: 100px;
+            border-radius: 5px;
+            margin: 0 5px;
+            border: 1px solid #555;
+        }
+        
+        .result-value {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: var(--cor-principal);
+            margin: 10px 0;
+        }
+        
+        .result-text {
+            font-size: 1.1em;
+            margin-bottom: 15px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Calculadora de Cores do Resistor</h1>
+
+        <div class="option-selector">
+            <label for="calcMode">Selecione o modo de cálculo:</label>
+            <select id="calcMode" onchange="toggleMode()">
+                <option value="valueToColor">Valor para Cores</option>
+                <option value="colorToValue">Cores para Valor</option>
+            </select>
+        </div>
+
+        <div id="valueToColorSection">
+            <div class="input-section">
+                <label for="resistanceInput">Digite o valor da resistência (Ω):</label>
+                <input type="number" id="resistanceInput" placeholder="Ex: 220, 47000" min="0">
+            </div>
+            <button onclick="calculateColors()">Calcular Cores</button>
+        </div>
+
+        <div id="colorToValueSection" class="hidden">
+            <div class="input-section">
+                <label for="band1">1ª Faixa:</label>
+                <select id="band1"></select>
+            </div>
+            <div class="input-section">
+                <label for="band2">2ª Faixa:</label>
+                <select id="band2"></select>
+            </div>
+            <div class="input-section">
+                <label for="band3">Multiplicador:</label>
+                <select id="band3"></select>
+            </div>
+            <div class="input-section">
+                <label for="band4">Tolerância:</label>
+                <select id="band4"></select>
+            </div>
+            <button onclick="calculateValue()">Calcular Valor</button>
+        </div>
+
+        <div id="resultSection" class="result-section hidden">
+            <p id="resultText" class="result-text"></p>
+            <div class="resistor-bands" id="colorBands"></div>
+            <p id="resultValue" class="result-value"></p>
+        </div>
+    </div>
+
+    <script>
+        const colorMap = {
+            'preto': { value: 0, multiplier: 1, tolerance: NaN, hex: '#000000' },
+            'marrom': { value: 1, multiplier: 10, tolerance: 0.01, hex: '#8B4513' },
+            'vermelho': { value: 2, multiplier: 100, tolerance: 0.02, hex: '#FF0000' },
+            'laranja': { value: 3, multiplier: 1000, tolerance: NaN, hex: '#FFA500' },
+            'amarelo': { value: 4, multiplier: 10000, tolerance: NaN, hex: '#FFFF00' },
+            'verde': { value: 5, multiplier: 100000, tolerance: 0.005, hex: '#008000' },
+            'azul': { value: 6, multiplier: 1000000, tolerance: 0.0025, hex: '#0000FF' },
+            'violeta': { value: 7, multiplier: 10000000, tolerance: 0.001, hex: '#EE82EE' },
+            'cinza': { value: 8, multiplier: 100000000, tolerance: 0.0005, hex: '#808080' },
+            'branco': { value: 9, multiplier: 1000000000, tolerance: NaN, hex: '#FFFFFF' },
+            'ouro': { value: NaN, multiplier: 0.1, tolerance: 0.05, hex: '#FFD700' },
+            'prata': { value: NaN, multiplier: 0.01, tolerance: 0.10, hex: '#C0C0C0' },
+        };
+
+        function populateSelects() {
+            const bands1_2 = ['preto', 'marrom', 'vermelho', 'laranja', 'amarelo', 'verde', 'azul', 'violeta', 'cinza', 'branco'];
+            const bands3 = ['preto', 'marrom', 'vermelho', 'laranja', 'amarelo', 'verde', 'azul', 'violeta', 'cinza', 'branco', 'ouro', 'prata'];
+            const bands4 = ['marrom', 'vermelho', 'ouro', 'prata'];
+
+            const select1 = document.getElementById('band1');
+            const select2 = document.getElementById('band2');
+            const select3 = document.getElementById('band3');
+            const select4 = document.getElementById('band4');
+
+            bands1_2.forEach(color => {
+                const option1 = new Option(color, color);
+                const option2 = new Option(color, color);
+                select1.add(option1);
+                select2.add(option2);
+            });
+            bands3.forEach(color => select3.add(new Option(color, color)));
+            bands4.forEach(color => select4.add(new Option(color, color)));
+        }
+
+        function toggleMode() {
+            const mode = document.getElementById('calcMode').value;
+            const valueToColor = document.getElementById('valueToColorSection');
+            const colorToValue = document.getElementById('colorToValueSection');
+            const resultSection = document.getElementById('resultSection');
+            
+            valueToColor.classList.toggle('hidden', mode !== 'valueToColor');
+            colorToValue.classList.toggle('hidden', mode !== 'colorToValue');
+            resultSection.classList.add('hidden');
+        }
+
+        function calculateColors() {
+            const resistance = parseFloat(document.getElementById('resistanceInput').value);
+            const resultText = document.getElementById('resultText');
+            const colorBands = document.getElementById('colorBands');
+            const resultSection = document.getElementById('resultSection');
+            const resultValue = document.getElementById('resultValue');
+
+            resultText.textContent = '';
+            colorBands.innerHTML = '';
+            resultValue.textContent = '';
+            resultSection.classList.add('hidden');
+
+            if (isNaN(resistance) || resistance < 0) {
+                resultText.textContent = 'Por favor, insira um valor de resistência válido.';
+                resultSection.classList.remove('hidden');
+                return;
+            }
+
+            const rStr = resistance.toString();
+            if (rStr.length < 2) {
+                resultText.textContent = 'Valores com menos de dois algarismos significativos não são padronizados.';
+                resultSection.classList.remove('hidden');
+                return;
+            }
+
+            let band1Color, band2Color, band3Color, band4Color;
+            let tempRes = resistance;
+            let multiplier = 1;
+            
+            // Loop para encontrar o multiplicador correto
+            while (tempRes >= 100) {
+                tempRes /= 10;
+                multiplier *= 10;
+            }
+            while (tempRes < 10) {
+                tempRes *= 10;
+                multiplier /= 10;
+            }
+            
+            const firstDigit = parseInt(tempRes.toString().charAt(0));
+            const secondDigit = parseInt(tempRes.toString().charAt(1));
+
+            band1Color = Object.keys(colorMap).find(key => colorMap[key].value === firstDigit);
+            band2Color = Object.keys(colorMap).find(key => colorMap[key].value === secondDigit);
+            band3Color = Object.keys(colorMap).find(key => colorMap[key].multiplier === multiplier);
+            band4Color = 'ouro'; // Padrão de 5% de tolerância
+
+            resultText.textContent = `As cores para ${resistance} Ω são: ${band1Color}, ${band2Color}, ${band3Color} e Ouro (5%).`;
+            resultValue.textContent = `Valor: ${resistance} Ω ±5%`;
+
+            const bandColors = [band1Color, band2Color, band3Color, band4Color];
+            bandColors.forEach(colorName => {
+                const band = document.createElement('div');
+                band.className = 'resistor-band';
+                band.style.backgroundColor = colorMap[colorName].hex;
+                colorBands.appendChild(band);
+            });
+
+            resultSection.classList.remove('hidden');
+        }
+
+        function calculateValue() {
+            const band1Color = document.getElementById('band1').value;
+            const band2Color = document.getElementById('band2').value;
+            const band3Color = document.getElementById('band3').value;
+            const band4Color = document.getElementById('band4').value;
+            
+            const resultText = document.getElementById('resultText');
+            const colorBands = document.getElementById('colorBands');
+            const resultSection = document.getElementById('resultSection');
+            const resultValue = document.getElementById('resultValue');
+            
+            resultText.textContent = '';
+            colorBands.innerHTML = '';
+            resultValue.textContent = '';
+            resultSection.classList.add('hidden');
+
+            if (!band1Color || !band2Color || !band3Color || !band4Color) {
+                resultText.textContent = 'Por favor, selecione as cores para todas as faixas.';
+                resultSection.classList.remove('hidden');
+                return;
+            }
+
+            const value1 = colorMap[band1Color].value;
+            const value2 = colorMap[band2Color].value;
+            const multiplier = colorMap[band3Color].multiplier;
+            const tolerance = colorMap[band4Color].tolerance;
+            
+            const resistance = (value1 * 10 + value2) * multiplier;
+            const tolerancePercent = tolerance * 100;
+            
+            resultText.textContent = `As cores selecionadas são: ${band1Color}, ${band2Color}, ${band3Color} e ${band4Color}.`;
+            resultValue.textContent = `Valor: ${resistance.toLocaleString()} Ω ±${tolerancePercent}%`;
+
+            const bandColors = [band1Color, band2Color, band3Color, band4Color];
+            bandColors.forEach(colorName => {
+                const band = document.createElement('div');
+                band.className = 'resistor-band';
+                band.style.backgroundColor = colorMap[colorName].hex;
+                colorBands.appendChild(band);
+            });
+
+            resultSection.classList.remove('hidden');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            populateSelects();
+            toggleMode();
+        });
+    </script>
+</body>
+</html>
