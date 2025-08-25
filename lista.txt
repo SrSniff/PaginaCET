@@ -1,2 +1,3 @@
 Divisor de tensão , DivTensao.html
 Canal Eletrônica e Tecnologia , https://youtube.com/@EletronicaeTecnologia
+Codigo de Coress dos Resistores , resistor.html
