@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Capacitor para Fonte | Eletrônica e Tecnologia</title>
+    <style>
+        :root {
+            --cor-principal: #008080; /* Verde água */
+            --cor-fundo: #0a0a0a;
+            --cor-secundaria: #1c1c1c; /* Preto quase total */
+            --cor-texto: #e0e0e0;
+            --cor-botoes: #00a0a0;
+            --cor-botoes-hover: #00c0c0;
+            --cor-borda: #444;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--cor-fundo);
+            color: var(--cor-texto);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background-color: var(--cor-secundaria);
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--cor-borda);
+            text-align: center;
+        }
+
+        h1 {
+            color: var(--cor-principal);
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        .input-section {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: var(--cor-texto);
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--cor-borda);
+            border-radius: 6px;
+            background-color: #2c2c2c;
+            color: var(--cor-texto);
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: var(--cor-botoes);
+            box-shadow: 0 0 5px var(--cor-botoes);
+        }
+        
+        button {
+            width: 100%;
+            padding: 15px;
+            background-color: var(--cor-botoes);
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 20px;
+        }
+
+        button:hover {
+            background-color: var(--cor-botoes-hover);
+        }
+
+        .result-section {
+            margin-top: 30px;
+            padding: 15px;
+            background-color: #1a1a1a;
+            border: 1px dashed var(--cor-principal);
+            border-radius: 6px;
+            text-align: left;
+        }
+        
+        .result-section h2 {
+            color: var(--cor-principal);
+            font-size: 1.4em;
+            margin-top: 0;
+        }
+
+        .result-section p {
+            font-size: 1.1em;
+            line-height: 1.5;
+            margin: 10px 0;
+        }
+        
+        .formula {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #2a2a2a;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+
+        .highlight {
+            color: #FFFF00; /* Amarelo para destacar o valor */
+            font-weight: bold;
+        }
+
+        #error-message {
+            color: #ff6347; /* Vermelho */
+            margin-top: 15px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Calculadora de Capacitor de Filtro</h1>
+
+        <p>
+            Calcule o capacitor de filtro ideal para sua fonte de alimentação retificadora de onda completa.
+            A frequência da rede elétrica é considerada 60 Hz, resultando em uma frequência de retificação de 120 Hz.
+        </p>
+
+        <div class="input-section">
+            <label for="currentInput">Corrente de Carga (<span class="highlight">I_L</span> em A):</label>
+            <input type="number" id="currentInput" placeholder="Ex: 2">
+        </div>
+
+        <div class="input-section">
+            <label for="rippleInput">Tensão de Ripple Desejada (<span class="highlight">V_ripple</span> em V):</label>
+            <input type="number" id="rippleInput" placeholder="Ex: 1">
+        </div>
+
+        <button onclick="calcularCapacitor()">Calcular Capacitor</button>
+
+        <p id="error-message"></p>
+
+        <div id="resultSection" class="result-section" style="display:none;">
+            <h2>Resultado</h2>
+            <p>A fórmula para o cálculo do capacitor é:</p>
+            <div class="formula">
+                <p>C = I_L / (f * V_ripple)</p>
+            </div>
+            <p id="calculationSteps"></p>
+            <p id="finalResult"></p>
+        </div>
+    </div>
+
+    <script>
+        function calcularCapacitor() {
+            const current = parseFloat(document.getElementById('currentInput').value);
+            const ripple = parseFloat(document.getElementById('rippleInput').value);
+            const frequency = 120; // Frequência para retificação de onda completa (2 * 60 Hz)
+
+            const errorMessage = document.getElementById('error-message');
+            const resultSection = document.getElementById('resultSection');
+            const calculationSteps = document.getElementById('calculationSteps');
+            const finalResult = document.getElementById('finalResult');
+
+            errorMessage.textContent = '';
+            resultSection.style.display = 'none';
+
+            if (isNaN(current) || isNaN(ripple) || current <= 0 || ripple <= 0) {
+                errorMessage.textContent = 'Por favor, insira valores válidos para corrente e ripple (maiores que zero).';
+                return;
+            }
+
+            const capacitorValue = current / (frequency * ripple);
+            const capacitorValue_uF = capacitorValue * 1000000;
+
+            calculationSteps.innerHTML = `
+                <p>Nossos valores:</p>
+                <ul>
+                    <li>Corrente de Carga (<span class="highlight">I_L</span>): ${current} A</li>
+                    <li>Frequência (<span class="highlight">f</span>): ${frequency} Hz</li>
+                    <li>Tensão de Ripple (<span class="highlight">V_ripple</span>): ${ripple} V</li>
+                </ul>
+                <p>Substituindo na fórmula, temos:</p>
+                <div class="formula">
+                    <p>C = ${current} / (${frequency} * ${ripple})</p>
+                    <p>C = ${current} / ${frequency * ripple}</p>
+                </div>
+            `;
+            
+            finalResult.innerHTML = `
+                <p>O valor mínimo do capacitor necessário é de aproximadamente <span class="highlight">${capacitorValue_uF.toFixed(2)} µF</span>.</p>
+                <p>É recomendado usar um capacitor com valor nominal igual ou superior ao calculado para garantir a estabilidade da fonte.</p>
+            `;
+
+            resultSection.style.display = 'block';
+        }
+    </script>
+
+</body>
+</html>
