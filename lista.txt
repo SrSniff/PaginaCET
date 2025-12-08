@@ -1,4 +1,4 @@
 Divisor de tensão , DivTensao.html
 Codigo de Coress dos Resistores , resistor.html
-Cláculo de capacitor para Ripple , capacitor_calc.html
+Cálculo de capacitor para Ripple , capacitor_calc.html
 Canal Eletrônica e Tecnologia , https://youtube.com/@EletronicaeTecnologia
