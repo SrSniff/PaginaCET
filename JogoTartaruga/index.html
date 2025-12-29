@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema Tartaruga Web</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@400;600;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Sidebar / Terminal -->
+        <aside class="sidebar">
+            <header>
+                <h1><img src="LOGO.PNG" class="brand-logo" alt="Logo"> TARTARUGA <span>v1.0</span></h1>
+            </header>
+
+            <div class="terminal-wrapper">
+                <textarea id="cmdInput" placeholder="Digite seus comandos aqui...
+Exemplo:
+ANDA 4
+DIREITA 90
+ANDA 2" spellcheck="false"></textarea>
+                <div id="executionView" class="hidden"></div>
+            </div>
+
+            <div class="button-group">
+                <button id="runBtn">EXECUTAR CÓDIGO</button>
+                <button id="resetBtn">RESETAR</button>
+                <button id="playBtn">JOGAR</button>
+            </div>
+        </aside>
+
+        <!-- Main Content / Board -->
+        <main class="board-area">
+            <div class="canvas-wrapper">
+                <canvas id="boardCanvas" width="600" height="600"></canvas>
+                <img id="apple" src="maca.webp" class="game-element hidden" alt="Maçã">
+                <img id="turtle" src="Tartaruga.png" alt="Tartaruga">
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
