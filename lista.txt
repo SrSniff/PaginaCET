@@ -1,4 +1,5 @@
 Divisor de tensão , DivTensao.html
 Codigo de Coress dos Resistores , resistor.html
 Cálculo de capacitor para Ripple , capacitor_calc.html
+Projeto Tartaruga , TartarugaWeb/index.html
 Canal Eletrônica e Tecnologia , https://youtube.com/@EletronicaeTecnologia
