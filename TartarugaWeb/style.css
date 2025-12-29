@@ -1,0 +1,229 @@
+:root {
+    --bg-color: #0f172a;
+    --sidebar-bg: rgba(30, 41, 59, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --accent-color: #10b981;
+    --accent-hover: #059669;
+    --text-color: #f8fafc;
+    --muted-color: #94a3b8;
+    --code-font: 'Fira Code', monospace;
+    --ui-font: 'Inter', sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: var(--bg-color);
+    background-image: radial-gradient(circle at top right, #1e293b 0%, #0f172a 100%);
+    color: var(--text-color);
+    font-family: var(--ui-font);
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.app-container {
+    display: grid;
+    grid-template-columns: 350px 1fr;
+    width: 95vw;
+    height: 90vh;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 24px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    overflow: hidden;
+}
+
+/* Sidebar */
+.sidebar {
+    background: var(--sidebar-bg);
+    border-right: 1px solid var(--glass-border);
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+header h1 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: -0.05em;
+    color: var(--text-color);
+}
+
+header h1 span {
+    font-size: 0.8rem;
+    color: var(--accent-color);
+    margin-left: 0.5rem;
+    vertical-align: middle;
+}
+
+.brand-logo {
+    height: 1em;
+    /* Matches font size */
+    width: auto;
+    vertical-align: middle;
+    margin-right: 0.5rem;
+}
+
+.terminal-wrapper {
+    flex-grow: 1;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 12px;
+    border: 1px solid var(--glass-border);
+    padding: 1rem;
+    transition: border-color 0.3s ease;
+}
+
+.terminal-wrapper:focus-within {
+    border-color: var(--accent-color);
+}
+
+textarea#cmdInput {
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    border: none;
+    color: #a7f3d0;
+    font-family: var(--code-font);
+    font-size: 0.9rem;
+    resize: none;
+    outline: none;
+    line-height: 1.6;
+}
+
+textarea#cmdInput::placeholder {
+    color: #475569;
+}
+
+/* Button Group */
+.button-group {
+    display: flex;
+    gap: 1rem;
+}
+
+button#runBtn,
+button#resetBtn {
+    flex: 1;
+    border: none;
+    padding: 1rem;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: var(--ui-font);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    transition: all 0.2s ease;
+}
+
+button#runBtn {
+    background: var(--accent-color);
+    color: #fff;
+    box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.3);
+}
+
+button#runBtn:hover {
+    background: var(--accent-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.4);
+}
+
+button#resetBtn {
+    background: #475569;
+    color: #f8fafc;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+}
+
+button#resetBtn:hover {
+    background: #334155;
+    transform: translateY(-2px);
+}
+
+button#runBtn:active,
+button#resetBtn:active {
+    transform: translateY(0);
+}
+
+/* Board Area */
+.board-area {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    background: radial-gradient(circle at center, rgba(255, 255, 255, 0.03) 0%, transparent 70%);
+}
+
+.canvas-wrapper {
+    position: relative;
+    width: 600px;
+    height: 600px;
+    border-radius: 4px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+    background: #000;
+}
+
+canvas#boardCanvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+/* Turtle Entity */
+#turtle {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+
+    top: 50%;
+    left: 50%;
+    transform-origin: center center;
+
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.5));
+    z-index: 10;
+
+    margin-top: -25px;
+    margin-left: -25px;
+}
+
+/* Execution View */
+.hidden {
+    display: none !important;
+}
+
+#executionView {
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    border: none;
+    color: #a7f3d0;
+    font-family: var(--code-font);
+    font-size: 0.9rem;
+    overflow-y: auto;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    cursor: default;
+}
+
+.exec-line {
+    padding: 0 4px;
+    border-radius: 4px;
+    transition: background 0.2s, box-shadow 0.2s;
+    display: block;
+}
+
+.highlight-line {
+    background: rgba(16, 185, 129, 0.2);
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.1);
+    color: #fff;
+    font-weight: 600;
+    border-left: 3px solid var(--accent-color);
+    padding-left: 6px;
+}
