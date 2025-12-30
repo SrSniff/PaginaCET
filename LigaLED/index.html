@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema Liga LED</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@400;600;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Sidebar / Terminal -->
+        <aside class="sidebar">
+            <header>
+                <h1><img src="LOGO.PNG" class="brand-logo" alt="Logo"> LIGA LED <span>v1.0</span></h1>
+            </header>
+
+            <div class="terminal-wrapper">
+                <textarea id="cmdInput" placeholder="Digite seus comandos aqui...
+Exemplo:
+ACIONAR 1 1
+ESPERAR 2
+ACIONAR 1 0" spellcheck="false"></textarea>
+                <div id="executionView" class="hidden"></div>
+            </div>
+
+            <div class="button-group">
+                <button id="runBtn">EXECUTAR CÓDIGO</button>
+                <button id="resetBtn">RESETAR</button>
+            </div>
+        </aside>
+
+        <!-- Main Content / Board -->
+        <main class="board-area">
+            <div class="led-wrapper">
+                <!-- LED 1: Yellow -->
+                <div class="led-item" id="led1-container">
+                    <img id="led1" src="LedAmarelo.png" alt="Led Amarelo">
+                    <span class="led-label">1 (Amarelo)</span>
+                </div>
+
+                <!-- LED 2: Green -->
+                <div class="led-item" id="led2-container">
+                    <img id="led2" src="LedVerde.png" alt="Led Verde">
+                    <span class="led-label">2 (Verde)</span>
+                </div>
+
+                <!-- LED 3: Red -->
+                <div class="led-item" id="led3-container">
+                    <img id="led3" src="LedVermelho.png" alt="Led Vermelho">
+                    <span class="led-label">3 (Vermelho)</span>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
