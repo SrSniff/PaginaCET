@@ -3,4 +3,5 @@ Codigo de Coress dos Resistores , resistor.html
 Cálculo de capacitor para Ripple , capacitor_calc.html
 Projeto Tartaruga , TartarugaWeb/index.html
 Jogo do Projeto Tartaruga , JogoTartaruga/index.html
+Projeto LIgar LED , LigaLED/index.html
 Canal Eletrônica e Tecnologia , https://youtube.com/@EletronicaeTecnologia
