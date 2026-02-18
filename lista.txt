@@ -1,6 +1,6 @@
 Divisor de tensão , DivTensao.html
 Resistores em Paralelo , ResistoresParalelo/index.html
-Codigo de Coress dos Resistores , resistor.html
+Codigo de Cores dos Resistores , resistor.html
 Cálculo de capacitor para Ripple , capacitor_calc.html
 Projeto Tartaruga , TartarugaWeb/index.html
 Jogo do Projeto Tartaruga , JogoTartaruga/index.html
