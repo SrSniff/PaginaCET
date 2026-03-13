@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soluções em Eletrônica</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <img src="LOGO.PNG" alt="Logo">
+        <h1>Soluções em Eletrônica</h1>
+    </header>
+
+    <div class="container">
+        <!-- Divisor de Tensão -->
+        <section class="panel" id="voltage-divider">
+            <h2>Divisor de Tensão</h2>
+            <div class="input-group">
+                <div class="field">
+                    <label>Tensão de Entrada (Vin) [V]</label>
+                    <input type="number" id="vd-vin" placeholder="Ex: 12">
+                </div>
+                <div class="field">
+                    <label>Tensão de Saída (Vout) [V]</label>
+                    <input type="number" id="vd-vout" placeholder="Calcular ou informar">
+                </div>
+                <div class="field">
+                    <label>Resistência 1 (R1) [Ω]</label>
+                    <input type="number" id="vd-r1" placeholder="Ex: 1000">
+                </div>
+                <div class="field">
+                    <label>Resistência 2 (R2) [Ω]</label>
+                    <input type="number" id="vd-r2" placeholder="Calcular ou informar">
+                </div>
+            </div>
+            <div class="field" style="margin-bottom: 1rem;">
+                <label>O que deseja calcular?</label>
+                <select id="vd-mode">
+                    <option value="vout">Calcular Tensão de Saída (Vout)</option>
+                    <option value="r2">Calcular Resistor 2 (R2)</option>
+                </select>
+            </div>
+            <button onclick="calculateVoltageDivider()">Calcular</button>
+            <div id="vd-result" class="result-area"></div>
+        </section>
+
+        <!-- Cálculo de Ripple -->
+        <section class="panel" id="ripple">
+            <h2>Cálculo de Ripple</h2>
+            <div class="input-group">
+                <div class="field">
+                    <label>Corrente de Carga (Iload) [A]</label>
+                    <input type="number" id="rip-iload" placeholder="Ex: 1">
+                </div>
+                <div class="field">
+                    <label>Frequência (f) [Hz]</label>
+                    <input type="number" id="rip-freq" value="120" placeholder="Ex: 120 (Ponte)">
+                </div>
+                <div class="field">
+                    <label>Ripple Desejado (Vpp) [V]</label>
+                    <input type="number" id="rip-vpp" placeholder="Ex: 0.5">
+                </div>
+            </div>
+            <button onclick="calculateRipple()">Calcular Capacitor</button>
+            <div id="rip-result" class="result-area"></div>
+        </section>
+
+        <!-- Resistores em Paralelo -->
+        <section class="panel" id="parallel">
+            <h2>Resistores em Paralelo</h2>
+            <div class="field">
+                <label>Valores das Resistências (Ω) - separados por vírgula</label>
+                <input type="text" id="par-values" placeholder="Ex: 100, 220, 470">
+            </div>
+            <button onclick="calculateParallel()" style="margin-top: 1rem;">Calcular R Total</button>
+            <div id="par-result" class="result-area"></div>
+        </section>
+
+        <!-- Resistor para LED -->
+        <section class="panel" id="led">
+            <h2>Resistor para LED</h2>
+            <div class="input-group">
+                <div class="field">
+                    <label>Tensão Fonte (Vcc) [V]</label>
+                    <input type="number" id="led-vcc" placeholder="Ex: 5">
+                </div>
+                <div class="field">
+                    <label>Tensão do LED (Vled) [V]</label>
+                    <input type="number" id="led-vled" placeholder="Ex: 2.0 (Vermelho)">
+                </div>
+                <div class="field">
+                    <label>Corrente do LED (Iled) [mA]</label>
+                    <input type="number" id="led-iled" placeholder="Ex: 20">
+                </div>
+            </div>
+            <button onclick="calculateLedResistor()">Calcular Resistor</button>
+            <div id="led-result" class="result-area"></div>
+        </section>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
