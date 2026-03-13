@@ -1,3 +1,4 @@
+Soluções para Eletrônica , SolucoesEletronica/index.html
 Divisor de tensão , DivTensao.html
 Resistores em Paralelo , ResistoresParalelo/index.html
 Codigo de Cores dos Resistores , resistor.html
