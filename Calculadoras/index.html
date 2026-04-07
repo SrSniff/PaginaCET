@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadoras Eletrônicas</title>
+    <style>
+      :root {
+          --bg-color: #0f172a;
+          --panel-bg: #1e293b;
+          --text-main: #f8fafc;
+          --text-muted: #94a3b8;
+          --accent: #38bdf8;
+          --accent-hover: #0ea5e9;
+          --danger: #ef4444;
+          --success: #10b981;
+          --border: #334155;
+          --font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      }
+
+      * {
+          box-sizing: border-box;
+          margin: 0;
+          padding: 0;
+      }
+
+      body {
+          background-color: var(--bg-color);
+          color: var(--text-main);
+          font-family: var(--font-family);
+          line-height: 1.6;
+          padding: 2rem;
+          min-height: 100vh;
+      }
+
+      h1 {
+          text-align: center;
+          margin-bottom: 2rem;
+          color: var(--accent);
+          font-weight: 700;
+          font-size: 2rem;
+      }
+
+      .dashboard {
+          max-width: 900px;
+          margin: 0 auto;
+          display: flex;
+          flex-direction: column;
+          gap: 2rem;
+      }
+
+      .card {
+          background-color: var(--panel-bg);
+          border: 1px solid var(--border);
+          border-radius: 12px;
+          padding: 2rem;
+          box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3);
+      }
+
+      .card-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          cursor: pointer;
+          user-select: none;
+      }
+      
+      .card-header h2 {
+          font-size: 1.5rem;
+          font-weight: 600;
+          color: var(--text-main);
+      }
+
+      .toggle-icon {
+          font-size: 1.5rem;
+          color: var(--accent);
+          transition: transform 0.3s ease;
+      }
+
+      .collapsible-content {
+          max-height: 0;
+          overflow: hidden;
+          transition: max-height 0.4s ease-out, opacity 0.4s ease-out;
+          opacity: 0;
+      }
+
+      .collapsible-content.open {
+          max-height: 1000px;
+          opacity: 1;
+          margin-top: 1.5rem;
+      }
+
+      .form-group {
+          margin-bottom: 1.25rem;
+      }
+
+      label {
+          display: block;
+          margin-bottom: 0.5rem;
+          font-weight: 500;
+          color: var(--text-muted);
+      }
+
+      input[type="number"] {
+          width: 100%;
+          padding: 0.75rem 1rem;
+          background-color: var(--bg-color);
+          border: 1px solid var(--border);
+          color: var(--text-main);
+          border-radius: 8px;
+          font-size: 1rem;
+          outline: none;
+          transition: border-color 0.2s;
+      }
+
+      input[type="number"]:focus {
+          border-color: var(--accent);
+          box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
+      }
+
+      button {
+          background-color: var(--accent);
+          color: #fff;
+          border: none;
+          padding: 0.75rem 1.5rem;
+          font-size: 1rem;
+          font-weight: 600;
+          border-radius: 8px;
+          cursor: pointer;
+          transition: background-color 0.2s, transform 0.1s;
+          width: 100%;
+          margin-top: 1rem;
+      }
+
+      button:hover {
+          background-color: var(--accent-hover);
+      }
+
+      button:active {
+          transform: scale(0.98);
+      }
+
+      .results-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 1rem;
+          margin-top: 1.5rem;
+      }
+
+      .result-box {
+          background-color: var(--bg-color);
+          border: 1px solid var(--border);
+          border-radius: 8px;
+          padding: 1.5rem;
+          text-align: center;
+          position: relative;
+      }
+
+      .result-label {
+          font-size: 0.9rem;
+          color: var(--text-muted);
+          margin-bottom: 0.5rem;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+      }
+
+      .result-value {
+          font-size: 2rem;
+          font-weight: 700;
+          color: var(--success);
+      }
+
+      .formula {
+          font-family: 'Courier New', Courier, monospace;
+          background-color: rgba(0, 0, 0, 0.2);
+          padding: 0.5rem;
+          border-radius: 6px;
+          margin-top: 1rem;
+          font-size: 0.85rem;
+          color: var(--accent);
+          text-align: center;
+      }
+
+      .warning {
+          color: var(--danger);
+          font-size: 0.9rem;
+          margin-top: 0.75rem;
+          display: none;
+          text-align: center;
+          font-weight: 500;
+      }
+
+      @media (max-width: 600px) {
+          .results-grid {
+              grid-template-columns: 1fr;
+          }
+          body {
+              padding: 1rem;
+          }
+      }
+    </style>
+</head>
+<body>
+    <h1>Calculadoras Eletrônicas</h1>
+    
+    <div class="dashboard">
+
+        <!-- Section 1: Associação de Resistores -->
+        <div class="card">
+            <div class="card-header" style="cursor: default;">
+                <h2>1. Associação de Resistores</h2>
+            </div>
+            <div style="margin-top: 1.5rem;">
+                <div class="form-group">
+                    <label for="r1">Resistor Conhecido (R₁ em Ω)</label>
+                    <input type="number" id="r1" step="any" min="0" placeholder="Ex: 100">
+                </div>
+                <div class="form-group">
+                    <label for="rf">Resistência Final Desejada (R_f em Ω)</label>
+                    <input type="number" id="rf" step="any" min="0" placeholder="Ex: 50">
+                </div>
+                <button onclick="calcularAssociacao()">Calcular Resistor R₂</button>
+                
+                <div class="results-grid">
+                    <div class="result-box">
+                        <div class="result-label">Necessário em SÉRIE</div>
+                        <div class="result-value" id="res-serie">-</div>
+                        <div class="formula">R₂ = R_f - R₁</div>
+                        <div id="warning-serie" class="warning">Cálculo impossível: R_f deve ser &ge; R₁ para associação em série.</div>
+                    </div>
+                    <div class="result-box">
+                        <div class="result-label">Necessário em PARALELO</div>
+                        <div class="result-value" id="res-paralelo">-</div>
+                        <div class="formula">R₂ = (R₁ &times; R_f) / (R₁ - R_f)</div>
+                        <div id="warning-paralelo" class="warning">Cálculo impossível: R_f deve ser &lt; R₁ para associação em paralelo.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 2: Divisor de Tensão -->
+        <div class="card">
+            <div class="card-header" onclick="toggleSection('divisor-tensao-content', 'icon-dt')" title="Clique para expandir/recolher aba">
+                <h2>2. Divisor de Tensão</h2>
+                <span class="toggle-icon" id="icon-dt">&#9660;</span>
+            </div>
+            <!-- Divisor is collapsed by default initially -->
+            <div id="divisor-tensao-content" class="collapsible-content">
+                <div class="form-group">
+                    <label for="vin">Tensão de Entrada (V_{in} em Volts)</label>
+                    <input type="number" id="vin" step="any" min="0" placeholder="Ex: 12">
+                </div>
+                <div class="form-group">
+                    <label for="r1_dt">Resistor Superior (R₁ em Ω)</label>
+                    <input type="number" id="r1_dt" step="any" min="0" placeholder="Ex: 1000">
+                </div>
+                <div class="form-group">
+                    <label for="vout">Tensão de Saída Desejada (V_{out} em Volts)</label>
+                    <input type="number" id="vout" step="any" min="0" placeholder="Ex: 5">
+                </div>
+                <button onclick="calcularDivisor()">Calcular Resistor R₂</button>
+
+                <div class="results-grid" style="grid-template-columns: 1fr;">
+                    <div class="result-box">
+                        <div class="result-label">Resistor Inferior Necessário (R₂)</div>
+                        <div class="result-value" id="res-r2-dt">-</div>
+                        <div class="formula">Fórmula: R₂ = (V_{out} &times; R₁) / (V_{in} - V_{out})</div>
+                        <div id="warning-dt" class="warning"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function formatValue(value) {
+            if (value === null || value === undefined || isNaN(value)) return "-";
+            return Number.isInteger(value) ? value.toString() : value.toFixed(2);
+        }
+
+        function calcularAssociacao() {
+            const r1 = parseFloat(document.getElementById('r1').value);
+            const rf = parseFloat(document.getElementById('rf').value);
+
+            const elSerie = document.getElementById('res-serie');
+            const elParalelo = document.getElementById('res-paralelo');
+            const warnSerie = document.getElementById('warning-serie');
+            const warnParalelo = document.getElementById('warning-paralelo');
+
+            // Reset
+            warnSerie.style.display = 'none';
+            warnParalelo.style.display = 'none';
+            elSerie.textContent = '-';
+            elParalelo.textContent = '-';
+            elSerie.style.color = 'var(--success)';
+            elParalelo.style.color = 'var(--success)';
+
+            if (isNaN(r1) || isNaN(rf) || r1 < 0 || rf < 0) {
+                alert("Por favor, insira valores numéricos válidos e positivos em todos os campos.");
+                return;
+            }
+
+            // --- Calculation for Series connection ---
+            // Requirement Rf >= R1
+            if (rf >= r1) {
+                const r2_serie = rf - r1;
+                elSerie.textContent = formatValue(r2_serie) + " Ω";
+            } else {
+                elSerie.textContent = "N/A";
+                elSerie.style.color = 'var(--text-muted)';
+                warnSerie.style.display = 'block';
+            }
+
+            // --- Calculation for Parallel connection ---
+            // Requirement R1 > Rf
+            if (r1 > rf) {
+                const r2_paralelo = (r1 * rf) / (r1 - rf);
+                elParalelo.textContent = formatValue(r2_paralelo) + " Ω";
+            } else {
+                elParalelo.textContent = "N/A";
+                elParalelo.style.color = 'var(--text-muted)';
+                warnParalelo.style.display = 'block';
+            }
+        }
+
+        function calcularDivisor() {
+            const vin = parseFloat(document.getElementById('vin').value);
+            const r1 = parseFloat(document.getElementById('r1_dt').value);
+            const vout = parseFloat(document.getElementById('vout').value);
+
+            const elR2 = document.getElementById('res-r2-dt');
+            const warnDt = document.getElementById('warning-dt');
+
+            elR2.textContent = '-';
+            elR2.style.color = 'var(--success)';
+            warnDt.style.display = 'none';
+
+            if (isNaN(vin) || isNaN(r1) || isNaN(vout) || vin < 0 || r1 < 0 || vout < 0) {
+                alert("Por favor, insira valores numéricos válidos e positivos em todos os campos.");
+                return;
+            }
+
+            if (vout >= vin) {
+                elR2.textContent = "Erro";
+                elR2.style.color = 'var(--danger)';
+                warnDt.innerHTML = "Cálculo impossível com divisor passivo.<br>A tensão de saída desejada (<b>V_{out}</b>) deve ser menor que a tensão de entrada (<b>V_{in}</b>).";
+                warnDt.style.display = 'block';
+                return;
+            }
+
+            // Calculate R2
+            const r2 = (vout * r1) / (vin - vout);
+            elR2.textContent = formatValue(r2) + " Ω";
+        }
+
+        function toggleSection(contentId, iconId) {
+            const content = document.getElementById(contentId);
+            const icon = document.getElementById(iconId);
+            
+            if (content.classList.contains('open')) {
+                content.classList.remove('open');
+                icon.style.transform = 'rotate(0deg)';
+            } else {
+                content.classList.add('open');
+                icon.style.transform = 'rotate(180deg)';
+            }
+        }
+    </script>
+</body>
+</html>
