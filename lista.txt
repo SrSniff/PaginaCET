@@ -1,6 +1,7 @@
 Soluções para Eletrônica , SolucoesEletronica/index.html
 Divisor de tensão , DivTensao.html
 Resistores em Paralelo , ResistoresParalelo/index.html
+Calculadora de Resistor, Calculadoras/index.html
 Codigo de Cores dos Resistores , resistor.html
 Cálculo RMS , CalculoRMS/index.html
 Cálculo de capacitor para Ripple , capacitor_calc.html
